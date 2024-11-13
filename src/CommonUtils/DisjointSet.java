@@ -12,13 +12,25 @@ import java.awt.*;
  */
 public class DisjointSet implements DisjointSetInterface {
 
+    int[] id;
+    int[] size;
+    int nsets;
     /**
      * Initializes a disjoint set of size n
      * @param n size of disjoint set
      * @throws IllegalArgumentException if passed an invalid size (<0)
      */
     public DisjointSet(int n) throws IllegalArgumentException {
-        //todo
+        if (n < 0) {
+            throw new IllegalArgumentException();
+        }
+        nsets = n;
+        id = new int[n];
+        size = new int[n];
+        for (int i = 0; i < n; i++) {
+            id[i] = i;
+            size[i] = 1;
+        }
     }
 
     /**
@@ -27,14 +39,17 @@ public class DisjointSet implements DisjointSetInterface {
      * <bold>251 students: it is recommended to use path compression (i.e. setting the parent of
      *   every node on the path from x to root(x) to be root(x))</bold>
      *
-     * @param x node to find the root of
+     * @param p node to find the root of
      * @return root of x
      * @throws IndexOutOfBoundsException if x is out of bounds
      */
     @Override
-    public int find(int x) throws IndexOutOfBoundsException {
-        //todo
-        return -1;
+    public int find(int p) throws IndexOutOfBoundsException {
+        if (p == id[p]) {
+            return p;
+        }
+        id[p] = find(id[p]);
+        return id[p];
     }
 
     /**
@@ -48,7 +63,20 @@ public class DisjointSet implements DisjointSetInterface {
      */
     @Override
     public void union(int x, int y) throws IndexOutOfBoundsException {
-        //todo
+        int idX = find(x);
+        int idY = find(y);
+        if (idX == idY) {
+            return;
+        }
+        if (size[idX] <= size[idY]) {
+            id[idX] = idY;
+            size[idY] = size[idX] + size[idY];
+        }
+        else {
+            id[idY] = idX;
+            size[idX] = size[idY] + size[idX];
+        }
+        nsets--;
     }
 
     /**
@@ -60,8 +88,7 @@ public class DisjointSet implements DisjointSetInterface {
      */
     @Override
     public int getSetSize(int x) throws IndexOutOfBoundsException {
-        //todo
-        return -1;
+        return size[find(x)];
     }
 
     /**
@@ -71,8 +98,7 @@ public class DisjointSet implements DisjointSetInterface {
      */
     @Override
     public int getDSSize() {
-        //todo
-        return -1;
+        return size.length;
     }
 
     /**
