@@ -3,6 +3,7 @@ package CommonUtils;
 import CommonUtils.UsefulContainers.Edge;
 import CommonUtils.UsefulContainers.iPair;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,8 +53,21 @@ public class MST {
                 throw new IllegalArgumentException("Edge weight < 0 (" +
                         e.w + ") between " + e.a + " and " + e.b);
         }
+        MinHeap<Edge> q = new MinHeap<>();
+        DisjointSet ds = new DisjointSet(n);
 
-        //todo
-        return null;
+        for (Edge e: edgeList) {
+            q.add(e);
+        }
+
+        ArrayList<iPair> t = new ArrayList<>();
+        while (t.size() < n - 1) {
+            Edge curr = q.removeMin();
+            if (ds.find(curr.a) != ds.find(curr.b)) {
+                t.add(new iPair(curr.a, curr.b));
+                ds.union(curr.a, curr.b);
+            }
+        }
+        return t;
     }
 }
