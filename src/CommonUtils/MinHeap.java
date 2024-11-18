@@ -160,6 +160,18 @@ public class MinHeap<E extends Comparable<E>> implements MinHeapInterface<E> {
         return size;
     }
 
+    public boolean set(E thing, E newThing) {
+        for (int i = 0; i < size; i++) {
+            if (heap[i].equals(thing)) {
+                heap[i] = newThing;
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
     /**
      * DO NOT MODIFY NOR IMPLEMENT THIS FUNCTION
      *

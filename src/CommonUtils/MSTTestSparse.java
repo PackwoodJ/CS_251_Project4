@@ -1,3 +1,5 @@
+package CommonUtils;
+
 import CommonUtils.MST;
 import CommonUtils.UsefulContainers.Edge;
 import CommonUtils.UsefulContainers.iPair;
@@ -6,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.ArrayList;
 
-public class TestMST {
+public class MSTTestSparse {
     @Test
     private void checkSizeAndEdges(int n, List<iPair> mst, List<iPair> expectedEdges) {
         assertEquals(n - 1, mst.size()); // MST should have n-1 edges
@@ -44,13 +46,13 @@ public class TestMST {
         List<iPair> mst = MST.sparseMST(edgeList, 8);
 
         List<iPair> expectedEdges = new ArrayList<>();
-        expectedEdges.add(new iPair(0,1));
+        expectedEdges.add(new iPair(0,1)); //
         expectedEdges.add(new iPair(0,2));
-        expectedEdges.add(new iPair(1,3));
-        expectedEdges.add(new iPair(2,4));
-        expectedEdges.add(new iPair(2,6));
-        expectedEdges.add(new iPair(3,5));
-        expectedEdges.add(new iPair(3,7));
+        expectedEdges.add(new iPair(1,3)); //
+        expectedEdges.add(new iPair(2,4)); //
+        expectedEdges.add(new iPair(2,6)); //
+        expectedEdges.add(new iPair(3,5)); //
+        expectedEdges.add(new iPair(3,7)); //
 
         checkSizeAndEdges(8, mst, expectedEdges);
     }
