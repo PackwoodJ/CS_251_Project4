@@ -1,10 +1,13 @@
 package BackendManagers;
 
 import BackendManagers.Interfaces.WorldBuildingUtilInterface;
+import CommonUtils.MST;
+import CommonUtils.UsefulContainers.iPair;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,15 +26,39 @@ public class WorldBuildingUtil implements WorldBuildingUtilInterface {
      */
     @Override
     public List<CityEdge> getMinimumConnectingRoads(String filename) {
+        int numCities = 0;
+        iPair[] cities = new iPair[0];
         try {
             BufferedReader bf = new BufferedReader(new FileReader(filename));
-
-            //todo
+            numCities = Integer.parseInt(bf.readLine());
+            cities = new iPair[numCities];
+            for (int i = 0; i < numCities; i++) {
+                int[] coords = new int[2];
+                String[] line = bf.readLine().split(" ");
+                for (int j = 0; j < 2; j++) {
+                    coords[j] = Integer.parseInt(line[j]);
+                }
+                cities[i] = new iPair(coords[0], coords[1]);
+            }
         } catch (IOException e) {
             //This should never happen... uh oh o.o
             System.err.println("ATTENTION TAs: Couldn't find test file: \"" + filename + "\":: " + e.getMessage());
             System.exit(1);
         }
-        return null;
+        double[][] weights = new double[numCities][numCities];
+        for (int i = 0; i < numCities; i++) {
+            for (int j = 0; j < numCities; j++) {
+                double dist = Math.sqrt((cities[i].a-cities[j].a)^2 + (cities[i].b-cities[j].b)^2);
+                weights[i][j] = dist;
+                weights[j][i] = dist;
+            }
+        }
+
+        List<iPair> mst = MST.denseMST(weights);
+        List<CityEdge> ret = new ArrayList<>();
+        for (iPair edge: mst) {
+            ret.add(new CityEdge(cities[edge.a], cities[edge.b]));
+        }
+        return ret;
     }
 }

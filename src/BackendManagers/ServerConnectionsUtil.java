@@ -1,10 +1,14 @@
 package BackendManagers;
 
 import BackendManagers.Interfaces.ServerConnectionsUtilInterface;
+import CommonUtils.MST;
+import CommonUtils.UsefulContainers.Edge;
+import CommonUtils.UsefulContainers.iPair;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,15 +28,30 @@ public class ServerConnectionsUtil implements ServerConnectionsUtilInterface {
      */
     @Override
     public List<ServerConnection> getMinimumServerConnections(String filename) {
+        int nServers = 0;
+        int nEdges = 0;
+        List<Edge> edgeList = new ArrayList();
         try {
             BufferedReader bf = new BufferedReader(new FileReader(filename));
-
-            //todo
+            String[] input = bf.readLine().split(" ");
+            nServers = Integer.parseInt(input[0]);
+            nEdges = Integer.parseInt(input[1]);
+            String[] line;
+            for (int i = 0; i < nEdges; i++) {
+                line = bf.readLine().split(" ");
+                edgeList.add(new Edge(Integer.parseInt(line[0]), Integer.parseInt(line[1]),
+                        Double.parseDouble(line[2])));
+            }
         } catch (IOException e) {
             //This should never happen... uh oh o.o
             System.err.println("ATTENTION TAs: Couldn't find test file: \"" + filename + "\":: " + e.getMessage());
             System.exit(1);
         }
-        return null;
+        List<iPair> mst = MST.sparseMST(edgeList, nServers);
+        List<ServerConnection> ret = new ArrayList();
+        for (iPair edge: mst) {
+            ret.add(new ServerConnection(edge.a, edge.b));
+        }
+        return ret;
     }
 }
